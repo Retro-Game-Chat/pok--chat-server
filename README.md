@@ -75,3 +75,5 @@ npm run dev
 ```
 npm start
 ```
+
+![Multiplayer Chat](https://media.giphy.com/media/iiPk2wggLLVpmJDyyt/giphy.gif)
