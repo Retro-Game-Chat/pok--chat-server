@@ -1,6 +1,7 @@
 // controllers/user.js
 
 const nexmo = require('../utils/nexmo');
+const e = require('express');
 
 exports.login = (req, res, next) => {
   const { 
@@ -21,6 +22,10 @@ exports.login = (req, res, next) => {
       y: -1
     }),
   }, (err, user) => {
+    if (err) {
+      console.error(err)
+    }
+
     nexmo.conversations.members.create(
       conversationId,
       {
@@ -31,6 +36,10 @@ exports.login = (req, res, next) => {
         }
       },
       (err, member) => {
+        if (err) {
+          console.error(err)
+        }
+
         const aclPaths = {
           "paths": {
             "/*/users/**": {},
@@ -66,8 +75,10 @@ exports.sync = (req, res, next) => {
   const { user_id, ...options } = req.body;
 
   nexmo.users.update(user_id, options, (err, result) => {
-    if (!err) {
-      res.json(result)
+    if (err) {
+      console.error(err)
     }
+  
+    res.json(result)
   });
 };
