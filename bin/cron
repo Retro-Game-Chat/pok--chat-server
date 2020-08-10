@@ -12,7 +12,7 @@ const findAndRemoveOldMembers = (err, res) => {
       const created = member.name.split('-').pop()
       const hoursAgo = (now-created)/3600000
   
-      if (hoursAgo > 1) {
+      if (hoursAgo > 6) {
         nexmo.conversations.members.delete(conversationId, member.id, (err, res) => {
           if (err) {
             console.error(err)
