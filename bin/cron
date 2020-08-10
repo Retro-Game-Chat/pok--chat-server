@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+require('dotenv').config();
+const nexmo = require('../utils/nexmo');
+const { VONAGE_DEFAULT_CONVERSATION_ID: conversationId } = process.env;
+
+const findAndRemoveOldMembers = (err, res) => {
+  const now = new Date().getTime()
+
+  res._embedded.data.members.forEach((member) => {
+    if (member.state === 'JOINED') {
+      const created = member.name.split('-').pop()
+      const hoursAgo = (now-created)/3600000
+  
+      if (hoursAgo > 1) {
+        nexmo.conversations.members.delete(conversationId, member.id, (err, res) => {
+          if (err) {
+            console.error(err)
+          }
+  
+          console.log(res)
+        })
+      }
+    }
+  })
+
+  // if (res._links.next) {
+  //   getNextPage(res)
+  // }
+}
+
+const pageOpt = { page_size: 100 }
+
+console.log('first page')
+nexmo.conversations.members.get(conversationId, pageOpt, findAndRemoveOldMembers)
+
+const getNextPage = (prevPage) => {
+  console.log('next page')
+  nexmo.conversations.members.next(prevPage, pageOpt, findAndRemoveOldMembers)
+}
