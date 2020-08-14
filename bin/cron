@@ -18,23 +18,21 @@ const findAndRemoveOldMembers = (err, res) => {
             console.error(err)
           }
   
-          console.log(res)
+          console.log(`remove ${member.id}`)
         })
       }
     }
   })
 
-  // if (res._links.next) {
-  //   getNextPage(res)
-  // }
+  if (res._links.next) {
+    getNextPage(res)
+  }
 }
 
 const pageOpt = { page_size: 100 }
 
-console.log('first page')
 nexmo.conversations.members.get(conversationId, pageOpt, findAndRemoveOldMembers)
 
 const getNextPage = (prevPage) => {
-  console.log('next page')
-  nexmo.conversations.members.next(prevPage, pageOpt, findAndRemoveOldMembers)
+  nexmo.conversations.members.next(prevPage, findAndRemoveOldMembers)
 }
